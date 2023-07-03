@@ -127,13 +127,17 @@ function onSubmit(e) {
     team.id = editId;
     updateTeamRequest(team).then(status => {
       if (status.success) {
-        //loadTeams();
-        // const i = allTeams.find(t => t.id == editId);
-        // allTeams[i] = team;
-
-        allTeams = [...allTeams];
-        const edited = allTeams.find(t => t.id == editId);
-        Object.assign(edited, team);
+        allTeams = allTeams.map(t => {
+          if (t.id === editId) {
+            //return team; OK
+            //return {...team}; OK
+            return {
+              ...t,
+              ...team
+            };
+          }
+          return t;
+        });
 
         displayTeams(allTeams);
         $("#teamsForm").reset();
