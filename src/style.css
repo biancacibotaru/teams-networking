@@ -1,0 +1,112 @@
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background-color: #e9f6f8;
+}
+
+header {
+  background-image: url(images/th.png);
+}
+
+#header-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: linear-gradient(45deg, #0798abfa, transparent);
+}
+header h1 {
+  margin: 5px 0;
+  color: #ffffff;
+}
+header h2 {
+  margin: 5px 0;
+  color: #ffffff;
+  font-weight: 100;
+  font-size: 1.2em;
+}
+#my-picture {
+  padding: 5px;
+  width: 108px;
+  height: 108px;
+}
+#my-picture img {
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background-color: #ffffff90;
+}
+#header-info {
+  padding: 10px;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+#main {
+  flex: 1;
+  padding: 15px;
+}
+
+#teamsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+#teamsTable th,
+#teamsTable td {
+  border: 1px solid #057988;
+  padding: 5px;
+}
+#teamsTable th {
+  background-color: #0798ab;
+  color: white;
+}
+#teamsTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+#teamsTable tfoot input[type="text"] {
+  width: 100%;
+}
+#teamsTable tfoot input:not([type="image" i]) {
+  box-sizing: border-box;
+}
+
+.remove-btn:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: darkred;
+}
+.edit-btn:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: green;
+}
+
+footer {
+  padding: 10px;
+  background-color: #057988;
+  color: #f5f5f5;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: 5px;
+}
+footer a {
+  color: #f5f5f5;
+  padding: 2px 5px;
+  text-decoration: none;
+  border-radius: 0.2em;
+  transition: 0.5s;
+}
+footer a:hover {
+  background-color: #0798ab;
+}
+footer .item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
