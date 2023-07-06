@@ -140,15 +140,16 @@ async function onSubmit(e) {
   const team = getTeamValues();
 
   showLoadingMask();
+  let status;
 
   if (editId) {
     team.id = editId;
     console.warn("before");
     console.time("update");
-    const { success } = await updateTeamRequest(team);
+    status = await updateTeamRequest(team);
     console.timeEnd("update");
-    console.warn("after", success);
-    if (success) {
+    console.warn("after", status.success);
+    if (status.success) {
       allTeams = allTeams.map(t => {
         if (t.id === editId) {
           //return team; OK
@@ -160,25 +161,20 @@ async function onSubmit(e) {
         }
         return t;
       });
-
-      displayTeams(allTeams);
-      $("#teamsForm").reset();
-
-      hideLoadingMask();
     }
   } else {
-    const status = await createTeamRequest(team);
+    status = await createTeamRequest(team);
     if (status.success) {
       //console.info("saved", JSON.parse(json.stringify(team)));
       team.id = status.id;
       // allTeams.push(team);
       allTeams = [...allTeams, team];
-      displayTeams(allTeams);
-
-      $("#teamsForm").reset();
-
-      hideLoadingMask();
     }
+  }
+  if (status.success) {
+    displayTeams(allTeams);
+    $("#teamsForm").reset();
+    hideLoadingMask();
   }
 }
 
