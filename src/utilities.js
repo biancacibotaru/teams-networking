@@ -10,7 +10,7 @@ export function mask(el) {
   if (typeof el === "string") {
     el = $(el);
   }
-  el && el.classList.remove("loading-mask");
+  el && el.classList.add("loading-mask");
   //$("#teamsForm").classList.add("loading-mask");
 }
 
