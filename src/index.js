@@ -1,19 +1,9 @@
 import "./style.css";
+import { $, mask, unmask } from "./utilities";
 
 let editId;
 let allTeams = [];
-
-function $(selector) {
-  return document.querySelector(selector);
-}
-
-function showLoadingMask() {
-  $("#teamsForm").classList.add("loading-mask");
-}
-
-function hideLoadingMask() {
-  $("#teamsForm").classList.remove("loading-mask");
-}
+const form = $("#teamsForm");
 
 function loadTeamsRequest() {
   return fetch("http://localhost:3000/teams-json", {
@@ -139,7 +129,7 @@ async function onSubmit(e) {
 
   const team = getTeamValues();
 
-  showLoadingMask();
+  mask(form);
   let status;
 
   if (editId) {
@@ -174,7 +164,7 @@ async function onSubmit(e) {
   if (status.success) {
     displayTeams(allTeams);
     $("#teamsForm").reset();
-    hideLoadingMask();
+    unmask(form);
   }
 }
 
@@ -199,12 +189,12 @@ function initEvents() {
     if (e.target.matches("a.remove-btn")) {
       const id = e.target.dataset.id;
       //console.warn("remove %o", id);
-      showLoadingMask();
+      mask(form);
       deleteTeamRequest(id, async ({ success }) => {
         if (success) {
           console.warn("delete done", status);
           await loadTeams();
-          hideLoadingMask();
+          unmask(form);
         }
       });
     } else if (e.target.matches("a.edit-btn")) {
@@ -221,24 +211,10 @@ function initEvents() {
   });
 }
 
-function sleep(ms) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
-}
-
-(async () => {
-  console.info("start sleeping...");
-  await sleep(2000);
-  console.warn("2. we are ready to do %o", "next job");
-})();
-
 initEvents();
 
 (async () => {
-  showLoadingMask();
+  mask(form);
   await loadTeams();
-  hideLoadingMask();
+  unmask(form);
 })();
