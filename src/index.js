@@ -200,5 +200,21 @@ function initEvents() {
   });
 }
 
+function sleep(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
+(() => {
+  console.info("start sleeping...");
+  sleep(2000).then(() => {
+    console.warn("we are ready to do %o", "next job");
+  });
+  console.warn("executed before sleep.then");
+})();
+
 loadTeams();
 initEvents();
