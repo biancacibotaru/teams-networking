@@ -98,7 +98,7 @@ function displayTeams(teams) {
 
 /**
  *
- * @returns {Promise<id: string, promotion: string[]>}
+ * @returns {Promise<{id: string, promotion: string}[]>}
  */
 function loadTeams() {
   return loadTeamsRequest().then(teams => {
@@ -134,7 +134,7 @@ function getTeamValues() {
   };
 }
 
-function onSubmit(e) {
+async function onSubmit(e) {
   e.preventDefault();
 
   const team = getTeamValues();
@@ -143,26 +143,29 @@ function onSubmit(e) {
 
   if (editId) {
     team.id = editId;
-    updateTeamRequest(team).then(({ success }) => {
-      if (success) {
-        allTeams = allTeams.map(t => {
-          if (t.id === editId) {
-            //return team; OK
-            //return {...team}; OK
-            return {
-              ...t,
-              ...team
-            };
-          }
-          return t;
-        });
+    console.warn("before");
+    console.time("update");
+    const { success } = await updateTeamRequest(team);
+    console.timeEnd("update");
+    console.warn("after", success);
+    if (success) {
+      allTeams = allTeams.map(t => {
+        if (t.id === editId) {
+          //return team; OK
+          //return {...team}; OK
+          return {
+            ...t,
+            ...team
+          };
+        }
+        return t;
+      });
 
-        displayTeams(allTeams);
-        $("#teamsForm").reset();
+      displayTeams(allTeams);
+      $("#teamsForm").reset();
 
-        hideLoadingMask();
-      }
-    });
+      hideLoadingMask();
+    }
   } else {
     createTeamRequest(team).then(status => {
       if (status.success) {
