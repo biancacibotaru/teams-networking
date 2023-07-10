@@ -123,31 +123,36 @@ async function onSubmit(e) {
   }
 }
 
-let timer;
-
 function debounce(fn, ms) {
-  console.info("debounce");
+  let timer;
+  console.info("debounce", ms);
 
   return function (e) {
-    console.warn("search...", e.target.value);
+    console.info("inside debounce...", timer);
 
     clearTimeout(timer);
     timer = setTimeout(function () {
-      console.warn("timeout search");
+      console.warn("debounce timeout");
       fn(e);
     }, ms);
-    // console.info("timer %o", timer);
+    //console.info("timer %o", timer);
   };
 }
 
 function initEvents() {
+  $("#removeSelected").addEventListener(
+    "click",
+    debounce(() => {
+      console.info("remove all");
+    }, 3000)
+  );
   $("#searchTeams").addEventListener(
     "input",
     debounce(e => {
-      console.info(e.target.value);
+      console.info("search:", e.target.value);
       const teams = filterElements(allTeams, e.target.value);
       displayTeams(teams);
-    }, 2000)
+    }, 400)
   );
 
   $("#teamsTable tbody").addEventListener("click", e => {
