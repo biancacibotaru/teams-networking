@@ -17,21 +17,44 @@ function getTeamAsHTML({ id, url, promotion, members, name }) {
     <td>${name}</td>
     <td><a href="${url} target="_blank">${displayUrl}</a></td>
     <td>
-      <a data-id="${id}" class="remove-btn">✖</a>
-      <a data-id="${id}" class="edit-btn">&#9998;</a>
+      <button type="button" data-id="${id}" class="action-btn edit-btn">&#9998;</button>
+      <button type="button" data-id="${id}" class="action-btn remove-btn">♻</button>
     </td>
+  </tr>`;
+}
+
+function getTeamAsHTMLInputs({ id, url, promotion, members, name }) {
+  const displayUrl = url.startsWith("https://github.com/") ? url.substring(19) : url;
+  return `<tr>
+  <td style= "text-align: center"><input type="checkbox" name="selected" value = "${id}"/></td>
+  <td>
+    <input type="text" name="promotion" value="${promotion}" placeholder="Enter promotion" required />
+  </td>
+  <td>
+    <input type="text" name="members" value="${members}" placeholder="Enter members" required />
+  </td>
+  <td>
+    <input type="text" name="name" value="${name}" placeholder="Enter name" required />
+  </td>
+  <td>
+    <input type="text" name="url" value="${url}" placeholder="Enter url" required />
+  </td>
+  <td>
+    <button type="submit" class="action-btn">💾</button>
+    <button type="reset" class="action-btn">✖</button>
+  </td>   
   </tr>`;
 }
 
 let previewDisplayTeams = [];
 
-function displayTeams(teams) {
-  if (teams == previewDisplayTeams) {
+function displayTeams(teams, editId) {
+  if (!editId && teams == previewDisplayTeams) {
     console.warn("same teams already displayed");
     return;
   }
 
-  if (teams.length === previewDisplayTeams.length) {
+  if (!editId && teams.length === previewDisplayTeams.length) {
     if (teams.every((team, i) => team === previewDisplayTeams[i])) {
       console.warn("same content");
       return;
@@ -40,7 +63,7 @@ function displayTeams(teams) {
 
   previewDisplayTeams = teams;
   console.warn("displayTeams", teams);
-  const teamsHTML = teams.map(getTeamAsHTML);
+  const teamsHTML = teams.map(team => (team.id === editId ? getTeamAsHTMLInputs(team) : getTeamAsHTML(team)));
   $("#teamsTable tbody").innerHTML = teamsHTML.join("");
 }
 
@@ -58,8 +81,9 @@ function loadTeams() {
 
 function startEdit(id) {
   editId = id;
-  const team = allTeams.find(team => team.id == id);
-  setTeamValues(team);
+  //const team = allTeams.find(team => team.id == id);
+  //setTeamValues(team);
+  displayTeams(allTeams, id);
 }
 
 function setTeamValues({ promotion, members, name, url }) {
@@ -159,7 +183,7 @@ function initEvents() {
   });
 
   $("#teamsTable tbody").addEventListener("click", e => {
-    if (e.target.matches("a.remove-btn")) {
+    if (e.target.matches(".remove-btn")) {
       const id = e.target.dataset.id;
       //console.warn("remove %o", id);
       mask(form);
@@ -170,7 +194,7 @@ function initEvents() {
           unmask(form);
         }
       });
-    } else if (e.target.matches("a.edit-btn")) {
+    } else if (e.target.matches(".edit-btn")) {
       const id = e.target.dataset.id;
       startEdit(id);
     }
