@@ -18,7 +18,7 @@ function getTeamAsHTML({ id, url, promotion, members, name }) {
     <td><a href="${url} target="_blank">${displayUrl}</a></td>
     <td>
       <button type="button" data-id="${id}" class="action-btn edit-btn">&#9998;</button>
-      <button type="button" data-id="${id}" class="action-btn remove-btn">♻</button>
+      <button type="button" data-id="${id}" class="action-btn remove-btn">🗑</button>
     </td>
   </tr>`;
 }
