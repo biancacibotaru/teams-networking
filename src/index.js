@@ -11,6 +11,7 @@ const form = "#teamsForm";
 function getTeamAsHTML({ id, url, promotion, members, name }) {
   const displayUrl = url.startsWith("https://github.com/") ? url.substring(19) : url;
   return `<tr>
+    <td><input type="checkbox" name="selected" value = "${id}"/></td>
     <td>${promotion}</td>
     <td>${members}</td>
     <td>${name}</td>
@@ -125,13 +126,20 @@ async function onSubmit(e) {
   }
 }
 
+async function removeSelected() {
+  mask("#main");
+  const selected = document.querySelectorAll("input[name=selected]:checked");
+  const ids = [...selected].map(input => input.value);
+  const promises = ids.map(id => deleteTeamRequest(id));
+  const statuses = await Promise.allSettled(promises);
+  console.warn("statuses", statuses);
+
+  await loadTeams();
+  unmask("#main");
+}
+
 function initEvents() {
-  $("#removeSelected").addEventListener(
-    "click",
-    debounce(() => {
-      console.info("remove all");
-    }, 3000)
-  );
+  $("#removeSelected").addEventListener("click", debounce(removeSelected, 200));
   $("#searchTeams").addEventListener(
     "input",
     debounce(function (e) {
